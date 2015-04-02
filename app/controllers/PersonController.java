@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class PersonController extends Controller {
 	
 	public static Result getPerson(Long id){
-		// DEBUG 
+		 
 		System.err.println("GET on id: "+ id);
 		
 		ObjectNode result = Json.newObject();
