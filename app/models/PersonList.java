@@ -2,9 +2,6 @@ package models;
 
 import java.util.ArrayList;
 
-import adt.SortedCircularDoublyLinkedList;
-
-
 public class PersonList {
 	
 	private ArrayList<Person> personList;

@@ -1,11 +1,11 @@
-package adt;
+package models;
 
 import java.util.Iterator;
 
-public interface SortedList<E extends Comparable<E>> extends Iterable<E>{
+public interface SortedCircularDoublyLinkedList<E extends Comparable<E>> extends Iterable<E> {
 	// valid position in the list
 	// [0, size() - 1]
-	
+
 	public boolean add(E obj);
 	public int size();
 	public boolean remove(E obj);
@@ -22,5 +22,4 @@ public interface SortedList<E extends Comparable<E>> extends Iterable<E>{
 	public int lastIndex(E e);
 	public ReverseIterator<E> reverseIterator();
 	public ReverseIterator<E> reverseIterator(int index);
-	
 }

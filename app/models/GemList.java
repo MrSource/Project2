@@ -1,90 +1,344 @@
 package models;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class GemList {
+/**
+ * SortedCircularDoublyLinkedList
+ * 
+ * @author Martin Rivera
+ *
+ * @param <E>
+ */
+public class GemList<E extends Comparable<E>> implements SortedCircularDoublyLinkedList<E> {
+	Node header;
+	int currentSize;
 
-	private ArrayList<Gem> GemList;
-	//private SortedCircularDoublyLinkedList<Person> personList1;
-
-	int counter = 1;
-	
-	private GemList(){
-		this.GemList = new ArrayList<Gem>(10);
+	// Default Constructor
+	private GemList() {
+		header = new Node();
+		header.setValue(null);
+		header.setNext(header);
+		header.setPrev(header);
+		currentSize = 0;
 	}
-	
-	public Gem addGem(Gem obj){
-		long id = this.counter++;
-		obj.setId(id);
-		this.GemList.add(obj);
-		return obj;
+
+	// Iterator Method
+	@Override
+	public Iterator<E> iterator() {
+		return new ListIterator();
 	}
-	
-	public Gem getGemById(long id){
-		for (Gem g : this.GemList){
-			if (g.getId() == id){
-				return g;
+
+	@Override
+	public boolean add(E obj) {
+		// base case
+		if (obj == null)
+			throw new IllegalArgumentException("Argument cannot be null.");
+
+		boolean aux = false; // helper bool variable to verify if the element is
+								// added.
+
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext()) {
+			if (obj.compareTo(temp.getValue()) < 0) {
+				if (temp.getPrev().getValue() == (header.getValue())) {
+					Node temp2 = new Node();
+					temp2.setValue(obj);
+					temp2.setNext(temp);
+					temp2.setPrev(header);
+					header.setNext(temp2);
+					temp.setPrev(temp2);
+					aux = true;
+					currentSize++;
+					break;
+				}
+
+				else {
+					Node temp2 = new Node();
+					temp2.setValue(obj);
+					temp2.setNext(temp);
+					temp2.setPrev(temp.getPrev());
+					temp.getPrev().setNext(temp2);
+					temp.setPrev(temp2);
+					aux = true;
+					currentSize++;
+					break;
+				}
 			}
 		}
+
+		if (aux == false) {
+			Node temp = new Node();
+			temp.setValue(obj);
+			temp.setNext(header);
+			temp.setPrev(header.getPrev());
+			header.getPrev().setNext(temp);
+			header.setPrev(temp);
+			aux = true;
+			currentSize++;
+		}
+		return aux;
+	}
+
+	/**
+	 * @return current size
+	 */
+	@Override
+	public int size() {
+		return currentSize;
+	}
+
+	@Override
+	public boolean remove(E obj) {
+		if (obj == null)
+			throw new IllegalArgumentException("Parameter cannot be null");
+
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext()) {
+			if (obj.compareTo(temp.getValue()) == 0) {
+				temp.getPrev().setNext(temp.getNext());
+				temp.getNext().setPrev(temp.getPrev());
+				temp.setNext(null);
+				temp.setPrev(null);
+				temp.setValue(null);
+				currentSize--;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean remove(int index) {
+		if ((index < 0) || (index > this.currentSize))
+			throw new IndexOutOfBoundsException();
+
+		int i = 0;
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext(), i++) {
+			if (index == i) {
+				temp.getPrev().setNext(temp.getNext());
+				temp.getNext().setPrev(temp.getPrev());
+				temp.setNext(null);
+				temp.setPrev(null);
+				temp.setValue(null);
+				currentSize--;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int removeAll(E obj) {
+		int counter = 0;
+		while (this.remove(obj)) {
+			counter++;
+		}
+		return counter;
+	}
+
+	@Override
+	public E first() {
+		if (isEmpty())
+			return null;
+		return header.getNext().getValue();
+	}
+
+	@Override
+	public E last() {
+		if (isEmpty())
+			return null;
+		return header.getPrev().getValue();
+	}
+
+	@Override
+	public E get(int index) {
+		if ((index < 0) || (index > this.currentSize)) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		int counter = 0;
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext(), counter++) {
+			if (counter == index)
+				return temp.getValue();
+		}
+
 		return null;
 	}
-	
-	public Gem[] getAllGems(){
-		Gem result[] = new Gem[this.GemList.size()];
-		for (int i=0; i < this.GemList.size(); ++i){
-			result[i] = this.GemList.get(i);
+
+	@Override
+	public void clear() {
+		while (!this.isEmpty()) {
+			this.remove(0);
 		}
-		return result;
 	}
-	
- 
-	
-	public boolean deleteGem(long id){
-		int target = -1;
-		
-		for (int i=0; i< this.GemList.size(); ++i){
-			if (this.GemList.get(i).getId() == id){
-				target = i;
-				break;
+
+	@Override
+	public boolean contains(E e) {
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext()) {
+			if (temp.getValue().compareTo(e) == 0) {
+				return true;
 			}
 		}
-		if (target == -1){
+
+		return false;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		if (currentSize == 0) {
+			return true;
+		} else {
 			return false;
 		}
-		else {
-			this.GemList.remove(target);
-			return true;
-		}
 	}
-	
-	public Gem updateGem(Gem obj){
-		int target = -1;
-		
-		for (int i=0; i< this.GemList.size(); ++i){
-			if (this.GemList.get(i).getId() == obj.getId()){
-				target = i;
-				break;
+
+	@Override
+	public Iterator<E> iterator(int index) {
+		return new ListIterator(index);
+	}
+
+	@Override
+	public int firstIndex(E e) {
+		int counter = 0;
+		for (Node temp = header.getNext(); temp.getValue() != null; temp = temp.getNext(), counter++) {
+			if (e.compareTo(temp.getValue()) == 0) {
+				return counter;
 			}
 		}
-		if (target == -1){
-			return null;
+
+		return -1;
+	}
+
+	@Override
+	public int lastIndex(E e) {
+		int counter = currentSize - 1;
+		for (Node temp = header.getPrev(); temp.getValue() != null; temp = temp.getPrev(), counter--) {
+			if (e.compareTo(temp.getValue()) == 0) {
+				return counter;
+			}
 		}
-		else {
-			Gem G = this.GemList.get(target);
-			G.setColor(obj.getColor());
-			G.setDescriptioin(obj.getDescriptioin());
-			G.setFaces(obj.getFaces());
-			G.setPrice(obj.getPrice());
-			G.setRarity(obj.getRarity());
-			G.setShine(obj.getShine());
-			G.setSold(obj.isSold());
-			return G;
+
+		return -1;
+	}
+
+	@Override
+	public ReverseIterator<E> reverseIterator() {
+		return new ReverseListIterator();
+	}
+
+	@Override
+	public ReverseIterator<E> reverseIterator(int index) {
+		return new ReverseListIterator(index);
+	}
+
+	private class Node {
+		private E value;
+		private Node next;
+		private Node prev;
+
+		public E getValue() {
+			return value;
+		}
+
+		public void setValue(E value) {
+			this.value = value;
+		}
+
+		public Node getNext() {
+			return next;
+		}
+
+		public void setNext(Node next) {
+			this.next = next;
+		}
+
+		public Node getPrev() {
+			return prev;
+		}
+
+		public void setPrev(Node prev) {
+			this.prev = prev;
 		}
 	}
+
+	private class ListIterator implements Iterator<E> {
+		private Node nextNode;
+
+		public ListIterator() {
+			this.nextNode = header.getNext();
+		}
+
+		public ListIterator(int index) {
+			if ((index < 0) || (index > currentSize))
+				throw new IndexOutOfBoundsException();
+
+			int counter = 0;
+			Node temp;
+
+			for (temp = header.getNext(); counter < index; temp = temp.getNext(), counter++);
+			this.nextNode = temp;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return nextNode.getValue() != null;
+		}
+
+		@Override
+		public E next() {
+			if (hasNext()) {
+				E result = this.nextNode.getValue();
+				this.nextNode = this.nextNode.getNext();
+				return result;
+			} else {
+				throw new NoSuchElementException();
+			}
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+
+		}
+	}
+
+	private class ReverseListIterator implements ReverseIterator<E> {
+		private Node prevNode;
+
+		public ReverseListIterator() {
+			this.prevNode = header.getPrev();
+		}
+
+		public ReverseListIterator(int index) {
+			int counter = currentSize;
+			Node temp;
+
+			for (temp = header.getPrev(); counter > currentSize - index; temp = temp.getPrev(), counter--);
+			this.prevNode = temp;
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			return prevNode != header;
+		}
+
+		@Override
+		public E previous() {
+			if (hasPrevious()) {
+				E result = prevNode.getValue();
+				prevNode = prevNode.getPrev();
+				return result;
+			} else {
+				throw new NoSuchElementException();
+
+			}
+
+		}
+
+	}
 	
-	private static GemList singleton= new GemList();
+	private static GemList<Gem> singleton = new GemList<Gem>();
 	
-	public static GemList getInstance(){
+	public static GemList<Gem> getInstance(){
 		return singleton;
 	}
 }

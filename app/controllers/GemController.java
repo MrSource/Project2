@@ -1,5 +1,8 @@
 package controllers;
 
+
+import java.util.ArrayList;
+
 import models.Gem;
 import models.GemList;
 import play.libs.Json;
@@ -12,36 +15,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class GemController extends Controller{
-	
-	public static Result getGem(Long id){
-		 
-		System.err.println("GET on id: "+ id);
-		
-		ObjectNode result = Json.newObject();
-		GemList theList = GemList.getInstance();
-		Gem G = theList.getGemById(id);
-		if (G == null){
-			return notFound("Gem Not Found"); // 404
-		}
-		else {
-			result.put("Gem", Json.toJson(G));
-			return ok(result);
-	
-		}
-	}
-	
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result storeGem(){
 		ObjectMapper mapper = new ObjectMapper();
 		 try {
-
+			 System.err.println("POST Data");
 			 JsonNode json = request().body().asJson();
-
+			 System.err.println("json payload: " + json);
 			 Gem newGem = mapper.readValue(json.toString(), Gem.class);
-			 GemList theList = GemList.getInstance(); 
-			 newGem = theList.addGem(newGem);
+			 GemList<Gem> gemList = GemList.getInstance(); 
+			 gemList.add(newGem);
 			 ObjectNode result = Json.newObject();
-			 result.put("Gem", Json.toJson(newGem));
+			 result.set("Gem", Json.toJson(newGem));
 			 return created(result);
 		 }
 		 catch(Exception e){
@@ -51,41 +36,32 @@ public class GemController extends Controller{
 		
 	}
 	
-	@BodyParser.Of(BodyParser.Json.class)
-	public static Result updateGem(Long id){
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-
-			 JsonNode json = request().body().asJson();
-			 Gem updGem = mapper.readValue(json.toString(), Gem.class);
-			 GemList theList = GemList.getInstance(); 
-			 updGem = theList.updateGem(updGem);
-			 if (updGem == null){
-				return notFound("Gem Not Found"); // 404 
-			 }
-			 else {
-				 ObjectNode result = Json.newObject();
-				 result.put("Gem", Json.toJson(updGem));
-				 return ok(result);
-			 }
+	public static Result getGem(Integer id){
+		// DEBUG 
+		System.err.println("GET on id: "+ id);
+		
+		ObjectNode result = Json.newObject();
+		GemList<Gem> theList = GemList.getInstance();
+		Gem P = theList.get(id);
+		if (P == null){
+			return notFound(); // 404
 		}
-		catch(Exception e){
-			 e.printStackTrace();
-			 return badRequest("Missing information");			
+		else {
+			result.set("Gem", Json.toJson(P));
+			return ok(result);
+	
 		}
 	}
 	
-	public static Result deleteGem(Long id){
-		GemList theList = GemList.getInstance();
-		boolean erased = theList.deleteGem(id);
-		if (erased){
-			// This is code 204 - OK with no content to return
-			return noContent();
+	//Add more controllers i.e getAll Gems to populate page
+	public static Result getGems(){
+		System.err.println("Get all gems");
+		ArrayList<Gem> newList = new ArrayList<Gem>();
+		GemList<Gem> theList = GemList.getInstance();
+		for(int i = 0; i<theList.size();i++){
+			newList.add(theList.get(i));
 		}
-		else {
-			return notFound("Gem Not Found");
-		}
-
+		JsonNode result = Json.toJson(newList);
+		return ok(result);
 	}
-
 }
