@@ -21,7 +21,8 @@ public class Gem implements Comparable<Gem> {
 	private String[] images;
 	
 	private Review review;
-	
+
+	private long Id;
 	
 	
 	public Gem(String name, String description, int shine, double price,
@@ -260,7 +261,13 @@ public class Gem implements Comparable<Gem> {
 	}
 
 
-
+	public long getId() {
+		return Id;
+	}
+ 
+	public void setId(long id) {
+		Id = id;
+	}
 
 
 	@Override

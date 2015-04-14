@@ -7,7 +7,8 @@ GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
 POST	/gem						controllers.GemController.storeGem()
 GET 	/gem/:id					controllers.GemController.getGem(id: Integer)
 GET 	/getGems					controllers.GemController.getGems()
+DELETE 	/gem/:id					controllers.GemController.deleteGem(id: Long)
+PUT		/gem/:id					controllers.GemController.updateGem(id: Long)
