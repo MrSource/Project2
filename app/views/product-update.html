@@ -1,0 +1,43 @@
+<!--  Update Form -->
+
+<form name="updateForm"  ng-controller = "StoreController as store" ng-repeat="product in store.products" ng-submit="store.updateGem(product,product.id)">
+
+  <!--  Update Form -->
+  <h4>Submit an Update</h4>
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.name" class="form-control" placeholder="Name" title="Name"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.price" class="form-control" placeholder="Price" title="Price"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.quantity" class="form-control" placeholder="Quantity" title="Quantity"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.shine" class="form-control" placeholder="Shine" title="Shine"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.faces" class="form-control" placeholder="Faces" title="Faces"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.rarity" class="form-control" placeholder="Rarity" title="Rarity"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.color" class="form-control" placeholder="Color" title="Color"></textarea>
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <textarea ng-model="store.products.description" class="form-control" placeholder="Description" title="Description"></textarea>
+  </fieldset>
+
+  <fieldset class="form-group">
+    <input type="submit" class="btn btn-primary pull-right" value="Submit Update" />
+  </fieldset>
+</form>
+
