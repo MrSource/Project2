@@ -1,15 +1,96 @@
-@(title: String)(content: Html)
-
 <!DOCTYPE html>
+<html id=main ng-app="gemStore">
 
-<html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/hello.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+  </head>
+
+  <body ng-controller="StoreController as store">
+    <!--  Store Header  -->
+    <header id=head>
+      <h1 class="text-center"> Crafted Gems</h1>
+      <h2 class="text-center"> an Angular store </h2>
+    </header>
+
+    <!--  Products Container  -->
+    <div class="list-group">
+      <!--  Product Container  -->
+      <div id=gems class="list-group-item" ng-repeat="product in store.products">
+        <h3 class= "head" >{{product.name}} 
+        <em class="pull-right">{{product.price | currency}}</em> 
+        </h3>
+         <table id=table>
+           
+           <tr>
+             <td> <p>Name</p>  <input  type="text" name="name"  ng-model="store.newproduct.name"/> </td>
+            <td> <p>Price</p>  <input type="text" name="price" ng-model="store.newproduct.price" /> </td>
+                </tr>
+                <tr>		
+        	<td> <p>Quantity</p> <input type="text" name="quantity"/>
+        	<td> <p>Shine</p>  <input  type="text" name="shine"  ng-model="store.newproduct.shine"/> </td></td>
+        </tr>
+        
+           
+              <tr>
+              <td>
+              <p>Faces</p> <input type="text" name="faces" ng-model="store.newproduct.faces" /></td> 
+                
+                <td> <p>Rarity</p>  <input type="text" name="rarity" ng-model="store.newproduct.rarity"/> </td>
+                 </tr>
+                <tr>
+           <td> <p>Color</p> <input type="text" name="color" ng-model="store.newproduct.color" /></td>
+           
+           <td> <p>Description</p> <input type="text" name="description"  ng-model="store.newproduct.description"/></td>
+            </tr>
+            
+            </table>
+		<h7>
+		<button type="button" id="update" ng-click="store.updateGem(product.id, store.newproduct)"> Update </button> 
+		<button type="button" id="delete" ng-click="store.deleteGem(product.id)"> Delete</button> 
+		</h7>
+        <!-- Image Gallery  -->
+        <product-gallery> </product-gallery>
+
+        <!-- Product Tabs  -->
+        <product-tabs> </product-tabs>
+			
+      </div>
+     
+    </div>
+    
+    <div >
+    <table id=table>
+   
+   <tr>
+     <td> <p>Name</p>  <input  type="text" name="name"  ng-model="store.product.name"/> </td>
+    <td> <p>Price</p>  <input type="text" name="price" ng-model="store.product.price" /> </td>
+        </tr>
+        <tr>		
+	<td> <p>Quantity</p> <input type="text" name="quantity"/>
+	<td> <p>Shine</p>  <input  type="text" name="shine"  ng-model="store.product.shine"/> </td></td>
+</tr>
+
+   
+      <tr>
+      <td>
+      <p>Faces</p> <input type="text" name="faces" ng-model="store.product.faces" /></td> 
+        
+        <td> <p>Rarity</p>  <input type="text" name="rarity" ng-model="store.product.rarity"/> </td>
+         </tr>
+        <tr>
+   <td> <p>Color</p> <input type="text" name="color" ng-model="store.product.color" /></td>
+   
+   <td> <p>Description</p> <input type="text" name="description"  ng-model="store.product.description"/></td>
+    </tr>
+    
+    </table>
+    
+ 		<button id=save type="submit"  ng-click=" store.addGem(store.product)">Save</button>
+    
+    </div>
+    
+  </body>
 </html>
