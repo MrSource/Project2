@@ -73,21 +73,25 @@ public class GemController extends Controller{
 	public static Result updateGem(Long id){
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-
+			 System.err.println("Updating Gem");
 			 JsonNode json = request().body().asJson();
 			 Gem updGem = mapper.readValue(json.toString(), Gem.class);
+			 updGem.setId(id);
 			 GemList theList = GemList.getInstance(); 
 			 updGem = theList.updateGem(updGem);
 			 if (updGem == null){
+				 System.err.println("null");
 				return notFound("Gem Not Found"); // 404 
 			 }
 			 else {
+				 System.err.println("success");
 				 ObjectNode result = Json.newObject();
 				 result.put("Gem", Json.toJson(updGem));
 				 return ok(result);
 			 }
 		}
 		catch(Exception e){
+			System.err.println("Missing");
 			 e.printStackTrace();
 			 return badRequest("Missing information");			
 		}
