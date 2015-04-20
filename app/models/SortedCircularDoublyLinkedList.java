@@ -15,7 +15,7 @@ public class SortedCircularDoublyLinkedList<E extends Comparable<E>> implements 
 	int currentSize;
 
 	// Default Constructor
-	    SortedCircularDoublyLinkedList() {
+	    public SortedCircularDoublyLinkedList() {
 		header = new Node();
 		header.setValue(null);
 		header.setNext(header);
