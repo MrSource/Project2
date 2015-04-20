@@ -30,14 +30,14 @@ app.controller('StoreController', ['$http', function($http) {
    var store = this;  //this is app 
    
    store.products = []; //this is so the page doesn't give an error when loading
-   $http.get("http://localhost:9000/getGems").success(function (data) {
+   $http.get("http://peaceful-journey-3820.herokuapp.com/getGems").success(function (data) {
  
    store.products = data; 
    });
 
 store.addGem = function(gem){
 //when the function is sucesful resets the products 
-	$http.post("http://localhost:9000/gem", gem).success(function name(data) {
+	$http.post("http://peaceful-journey-3820.herokuapp.com/gem", gem).success(function name(data) {
 //data es lo que devuelve 
 	store.products.push(data); 
   location.reload();
@@ -45,26 +45,26 @@ store.addGem = function(gem){
 }
 store.deleteGem = function(gemId){
 //when the function is sucesful resets the products 
-    $http.delete("http://localhost:9000/gem/"+gemId);
+    $http.delete("http://peaceful-journey-3820.herokuapp.com/gem/"+gemId);
     
-    $http.get("http://localhost:9000/getGems").success(function (data) {
+    $http.get("http://peaceful-journey-3820.herokuapp.com/getGems").success(function (data) {
       store.products = data; 
       });
 }
 
 store.updateGem = function(gemId, gem){
 	
-    $http.put("http://localhost:9000/gem/"+gemId, gem).success(function name(data){
+    $http.put("http://peaceful-journey-3820.herokuapp.com/gem/"+gemId, gem).success(function name(data){
     });
   
-    $http.get("http://localhost:9000/getGems").success(function (data) {
+    $http.get("http://peaceful-journey-3820.herokuapp.com/getGems").success(function (data) {
       store.products = data; 
       });
     location.reload();
 }
 
 store.getGems = function(){
- $http.get("http://localhost:9000/getGems").success(function (data) {
+ $http.get("http://peaceful-journey-3820.herokuapp.com/getGems").success(function (data) {
  store.products = data; 
    });
  location.reload();
